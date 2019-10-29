@@ -1,26 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import RandomQuotes from './components/RandomQuotes';
+import axios from 'axios';
 
-function App() {
-  return (
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      simpsonsQuotes: null
+    };
+    this.getSimpsonsQuotes = this.getSimpsonsQuotes.bind(this);
+  }
+
+  getSimpsonsQuotes() {
+    axios.get('https://quests.wilders.dev/simpsons-quotes/quotes')
+      .then(response => response.data)
+      .then(data => {
+        this.setState({
+          simpsonsQuotes: data[0],
+        });
+      })
+  }
+
+  render() {
+    return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    {this.state.simpsonsQuotes ? <RandomQuotes simpsonsQuotes={this.state.simpsonsQuotes} /> : null}
+    <button type="button" onClick={this.getSimpsonsQuotes}>Get Simpsons Quotes</button> 
     </div>
   );
+  }
 }
+
 
 export default App;
